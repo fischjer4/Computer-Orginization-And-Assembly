@@ -1,1 +1,11 @@
+#Added by MacOS
 .DS_Store
+
+#Added by compiling tex files
+*.toc
+*.aux
+*.log
+*.bbl
+*.dvi
+*.blg
+*.synctex.gz
