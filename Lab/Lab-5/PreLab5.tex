@@ -1,0 +1,148 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+
+\usepackage{listings}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Pre-Lab 5\\[1cm]
+    }
+    {\large
+     	Large Number Arithmetic
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday 10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+    
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Pre-Lab}
+
+	\begin{enumerate}
+		\item 
+		For this lab, you will be asked to perform arithmetic operations on numbers that are \textbf{larger than 8 bits.} 
+		To be successful at this, you will need to understand and utilize many of the various arithmetic operations supported by the AVR 8-bit instruction set. 
+		List and describe \textbf{all} of the addition, subtraction, and multiplication instructions (i.e. ADC, SUBI, FMUL, etc.) available in AVR’s 8-bit instruction set.
+		
+		\textit{All descriptions of the below instructions were taken from microchip.com \cite{micro}}
+		
+		\begin{itemize}
+			\item 
+			\textbf{ADC:} Adds two registers and the contents of the C flag and places the result in the destination register Rd.
+			
+			\item 
+			\textbf{ADD:} Adds two registers without the C flag and places the result in the destination register Rd.
+			
+			\item 
+			\textbf{ADIW:} Adds an immediate value (0-63) to a register pair and places the result in the register pair. This instruction operates on the upper four register pairs, and is well suited for operations on the pointer registers.
+			
+			\item 
+			\textbf{FMUL:} This instruction performs 8-bit x 8-bit $\rightarrow$ 16-bit unsigned multiplication and shifts the result one bit left.
+			
+			\item 
+			\textbf{FMULS:} This instruction performs 8-bit x 8-bit $\rightarrow$ 16-bit signed multiplication and shifts the result one bit left.
+			
+			\item 
+			\textbf{FMULSU:} This instruction performs 8-bit x 8-bit $\rightarrow$ 16-bit signed multiplication and shifts the result one bit left.
+			
+			\item 
+			\textbf{MUL:} This instruction performs 8-bit x 8-bit $\rightarrow$ 16-bit unsigned multiplication.
+			
+			\item 
+			\textbf{MULS:} This instruction performs 8-bit x 8-bit $\rightarrow$ 16-bit signed multiplication.
+			
+			\item 
+			\textbf{MULSU:} This instruction performs 8-bit x 8-bit $\rightarrow$ 16-bit multiplication of a signed and an unsigned number.
+			
+			\item 
+			\textbf{SBC:} Subtracts two registers and subtracts with the C flag and places the result in the destination register Rd.
+			
+			\item 
+			\textbf{SBCI:} Subtracts a constant from a register and subtracts with the C flag and places the result in the destination register Rd.
+			
+			\item 
+			\textbf{SBIW:} Subtracts an immediate value (0-63) from a register pair and places the result in the register pair. This instruction operates on the upper four register pairs, and is well suited for operations on the pointer registers.
+			
+			\item 
+			\textbf{SUB:} Subtracts two registers and places the result in the destination register Rd.
+			
+			\item 
+			\textbf{SUBI:} 
+			Subtracts a register and a constant and places the result in the destination register Rd. This instruction is working on Register R16 to R31 and is very well suited for operations on the X, Y and Z pointers.
+			
+		\end{itemize}
+	
+		\clearpage
+		
+		\item 
+		Write pseudocode for an 8-bit AVR function that will take two 16-bit numbers (from data memory addresses \$0111:\$0110 and \$0121:\$0120),\textit{ add
+		them together}, and then store the 16-bit result (in data memory addresses \$0101:\$0100). 
+		(Note: The syntax “\$0111:\$0110” is meant to specify that the function will expect \textit{little-endian} data, where the highest byte of a multi-byte value is stored in the highest address of its range of addresses.)
+
+		\begin{lstlisting}
+			Func:
+				;Set R4 to all 0's
+				clr R4
+				
+				;Get values from memory
+				R0 = M[$0110] ;R1:R0
+				R1 = M[$0111]
+				R2 = M[$0120] ;R3:R2d
+				R3 = M[$0121]
+				
+				;Add R1:R0 to R3:R2
+				add R2, R0 ; Add low byte
+				adc R3, R1 ; Add with carry high byte
+				
+				;Store result
+				M[$0100] = R3	;result
+				M[$0101] = R4	;possible carry
+		\end{lstlisting}
+	
+	
+		\item 
+		Write pseudocode for an 8-bit AVR function that will take the 16-bit number in \$0111:\$0110,\textbf{ subtract it from} the 16-bit number in \$0121:\$0120, and then store the 16-bit result into \$0101:\$0100.
+	
+		\begin{lstlisting}
+			Func:
+				;Get values from memory
+				R0 = M[$0110] ;R1:R0
+				R1 = M[$0111]
+				R2 = M[$0120] ;R3:R2d
+				R3 = M[$0121]
+			
+				; Subtract R1:R0 from R3:R2
+				sub R2, R0 ; Subtract low byte
+				sbc R3, R1 ; Subtract with carry high byte
+			
+				;Store result
+				M[$0100] = R3	;result
+		\end{lstlisting}
+	
+	
+	
+	\end{enumerate}
+
+	\bibliographystyle{IEEEtran}
+	\bibliography{references.bib}
+
+\end{document}
+

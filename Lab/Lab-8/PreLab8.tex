@@ -1,0 +1,117 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Pre-Lab 8\\[1cm]
+    }
+    {\large
+     	 Remotely Operated Vehicle (USART)
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday 10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+    
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Pre-Lab}
+
+	\begin{enumerate}
+		\item
+		\textit{In this lab, you will be given a set of behaviors/actions that you need to have a proof-of-concept “toy” perform. 
+		Think of a toy you know of (or look around online for a toy) that is likely implemented using a microcontroller, and \textbf{describe the behaviors it performs}. 
+		Here is an example behavior: “If you press button X on the toy, it takes action Y (or makes sound Z)”.}
+		
+		Any baby toy that plays music, or makes a sound, based off of the button that was pressed.
+		Think of a toy in the shape of a barn.
+		When the pig shaped button is pressed the barn speakers output "oink oink."
+		When the cow shaped button is pressed the barn speakers output "mooooooo."
+		And when the dog shaped button is pressed the barn speakers output "roof roof."
+		
+		
+		\item
+		\textit{For each behavior you described in the previous question, explain which microcontroller feature was likely used to implement that behavior, and give a brief code example indicating how that feature should be configured. 
+		Make your explanation as \textbf{ATmega128-specific as possible} (e.g., discuss which I/O registers would need to be configured, and if any interrupts will be used), and also mention if any additional mechanical and/or electronic devices are needed.}
+		
+		This is most likely set up the exact same way our AtMega128 button presses and LEDs are set up.
+		The buttons could be set up as input on Port D with the pull-up mode set.
+		And the two speakers could be setup as output on Port B.
+		Each of the button presses could be set up via interrupts, so when the pig button is pressed the microcontroller sends the recorded pig sound to the speakers. 
+		
+		\begin{verbatim}
+			Setup Pig interrupt
+			Setup Cow interrupt
+			Setup Dog interrupt
+			
+			Set up bits 0, 1, and 2 on Port D for input
+			Set up bits 0, 1, and 2 on  Port D as pull-up
+			
+			Set up bits 0 and 1 on Port B as output
+			
+			MAIN:
+				rjmp MAIN
+				
+			PIG_ISR:
+				Play Pig Sound
+				Unstage staged interrupts
+			
+			COW_ISR:
+				Play Cow Sound
+				Unstage staged interrupts
+			
+			DOG_ISR:
+				Play Dog Sound
+				Unstage staged interrupts
+				
+		\end{verbatim}
+		
+		
+		\item
+		\textit{Each ATmega128 USART module has two flags used to indicate its current \textbf{transmitter} state: the Data Register Empty (UDRE) flag and Transmit Complete (TXC) flag. 
+		What is the difference between these two flags, and which one always gets set first as the transmitter runs? 
+		You will probably need to read about the\textit{ Data Transmission} process in the datasheet (including looking at any relevant USART diagrams) to answer this question.}
+		
+		UDRE is set when the byte that is in UDR moves from UDR to the transmit shift register. 
+		It is important to note that this doesn't mean that the byte has been transmitted yet.
+		All it means is that UDR is now clear for the next byte to be written. 
+		TXC on the other hand is set when the byte has actual been transmitted.
+		To answer the question about which gets set first, it is UDRE since it is set when the data moves to the transmit shift register.
+		
+		
+		
+		
+		\item
+		\textit{Each ATmega128 USART module has one flag used to indicate its current \textbf{receiver} state (not including the error flags). \textbf{For USART1 specifically}, what is the name of this flag, and what is the interrupt vector address for the interrupt associated with this flag? 
+		This time, you will probably need to read about Data Reception in the datasheet to answer this question.}
+		
+		RXC1 (USART Receive Complete) is the flag which indicates the current reciever state.
+		The vector number is 31 and the vector address is 0x003C.
+		
+		
+		
+	\end{enumerate}
+\end{document}
+

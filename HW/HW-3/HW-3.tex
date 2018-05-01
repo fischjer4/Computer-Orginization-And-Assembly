@@ -1,0 +1,172 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\usepackage{color}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Homework 3\\[1cm]
+    }
+    {\large
+       Computer Organization and Assembly Language Programming
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Winter Term 2018
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Homework Questions}
+	\begin{enumerate}
+	    %Question 1
+	    \item
+		The AVR code below (with some information missing) is designed to initialize and service interrupts from three I/O devices (DevA, DevB, and DevC). 
+	
+		\begin{enumerate}[a]
+			\item
+			There are 8 external interrupt pins (INT0-INT7) in AVR. 
+			Which of the three interrupt pins are these I/O devices connected to and what is the immediate value needed in line (1)?
+			
+			\textbf{Answer:}
+			The three I/O devices are connnected to INT0, INT3, and INT5.
+			The immediate value needed in line (1) is: 0b00101001.
+			
+			
+			\item
+			Which I/O device’s interrupt is detected on a falling edge?
+			
+			\textbf{Answer:}
+			INT3 is detected on a falling edge.
+			
+			
+			\item
+			The interrupt pins referred to in part (a) are connected to two of the 7 ports (PORTA-PORTG) in AVR.
+			Which ports are they?
+			
+			\textbf{Answer:}
+			INT0 and INT3 are connected to PORTD and INT5 is connected to PORTE.
+			
+			
+			\item
+			There are important instructions missing in lines 2-3 of the code. 
+			Fill in the missing instructions in lines 2-3 so that the code will work correctly.
+			
+			\textbf{Answer:} Shown Below.
+			
+			\item 
+			Suppose DevA requires that no interrupts are detected while it is being serviced. 
+			Fill in lines 4-5 with the necessary code to clear any latched interrupts at the end of ISR\_DevA.
+			
+			\textbf{Answer:} Shown Below.
+			
+			
+			\item
+			Suppose interrupts are detected from all three interrupt pins at the same time. 
+			Which subroutine (ISR\_DevA, ISR\_DevB, or ISR\_DevC) will be executed first? 
+			
+			\textbf{Answer:} INT0 would be triggered, meaning that ISR\_DevA would be called.
+			
+		\end{enumerate}
+
+	   \lstinputlisting{Q1.asm}
+	   
+	  
+	
+		\clearpage
+		%Question 2
+	   \item
+	 	Consider the WAIT subroutine for Tekbot discussed in class that waits for 1 sec. and returns. 
+	 	Rewrite the WAIT subroutine so that it waits for 1 sec. using the 16-bit Timer/Counter1 with the highest resolution.
+	 	Assume that the system clock frequency is 16 MHz and the Timer/Counter1 is operating under the CTC
+	 	mode. 
+	 	This is done by doing the following: 
+	 	
+	 	(a) Timer/Counter1 is initialized to operate in the CTC mode.
+	 	
+	 	(b) The WAIT subroutine loads the proper value into OCR1A and waits until OCF1 is set. Once OCF1 is set, it is cleared and the WAIT subroutine returns.
+	 	
+	 	Use the skeleton code shown below. Also, show the necessary calculations for determining \textit{value} and \textit{prescale}. 
+	 	Note that your code may not use any other GPRs besides mpr.
+	 	
+	 	
+		\textbf{Answer:}
+		\lstinputlisting{Q2.asm}
+		
+		
+		\clearpage
+		%Question 3
+		\item
+		Consider the following AVR assembly code that waits for 1 sec. using the 8-bit Timer/Counter0 with the system clock frequency of 16 MHz operating under Normal mode. Write and explain the instructions in lines (1-10) necessary to make this code work properly. 
+		More specifically, 
+		\begin{enumerate}[a]
+			\item 
+			Fill in lines (1-2) with the necessary code to enable the interrupt on Timer/Counter0 overflow.
+			
+			\item
+			Fill in lines (3-4) with the necessary code to load the value for delay that generates an interrupt after 5
+			ms.
+			
+			\item 
+			Fill in lines (5-6) with the necessary code to set the prescalar value and the mode of operation.
+			
+			\item 
+			Fill in line (7) with the necessary code to set counter.
+			
+			\item
+			Fill in lines (8-9) with the necessary code to reload the value for delay.
+			
+			\item
+			Fill in line (10) with the necessary code to decrement counter.
+		\end{enumerate}
+		
+		\textbf{Answer:}
+		\lstinputlisting{Q3.asm}
+		
+		\clearpage
+		
+		\item
+		Consider the AVR code segment shown below that performs initialization and receive routines for USART1 to continuously receives data from a transmitter. Write and explain the instructions in lines (1-16) necessary to make this code work properly. 
+		More specifically,
+		\begin{enumerate}[a]
+			\item 
+			Fill in lines (1-4) with the necessary code to initialize the stack pointer.
+			
+			\item 
+			Fill in lines (5-6) with the necessary code to configure RXD1 (Port D, pin 2).
+			
+			\item 
+			Fill in lines (7-10) with the necessary code to set the Baud rate at 9,600 bps using double data rate.
+			
+			\item 
+			Fill in lines (11-12) with the necessary code to enable the receiver and the Receive Complete interrupt.
+			
+			\item 
+			Fill in lines (13-14) to set the frame format to be asynchronous with 8 data bits, 2 stop bits, and even parity.
+			
+			\item 
+			Fill in lines (15-16) to receive data and store it into Buffer.
+		\end{enumerate}
+		Assume the system clock frequency of 16 MHz.
+		
+		\textbf{Answer:}
+		\lstinputlisting{Q4.asm}
+		
+	\end{enumerate}
+
+\end{document}

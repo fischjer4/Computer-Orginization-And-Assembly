@@ -1,0 +1,367 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\usepackage{color}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{multirow}
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Homework 4\\[1cm]
+    }
+    {\large
+       Computer Organization and Assembly Language Programming
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Winter Term 2018
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Homework Questions}
+	The following questions are based on the enhanced AVR datapath (see Figures 8.24 and 8.26 in the text). 
+	The microoperation for the Fetch cycle is shown below.
+	
+	\begin{tabular}{ |c|c| } 
+			\hline
+			Stage & Micro-operations \\ \hline
+			IF & IR $\leftarrow$ M[PC], PC $\leftarrow$ PC + 1, NPC $\leftarrow$ PC + 1, RAR $\leftarrow$ PC + 1  \\ \hline
+	\end{tabular}
+
+	\begin{enumerate}
+	    %Question 1
+	    \item
+	    Consider the implementation of the \textit{CLR Rd} (Clear Register) instruction on the enhanced AVR datapath.
+	    \begin{enumerate}[a]
+	    	\item
+	    	List and explain the sequence of microoperations required to implement \textit{CLR Rd}. Note that this
+	    	instruction takes a single execute cycle (EX).
+	    	
+	    	\item
+	    	List and explain the control signals and the Register Address Logic (RAL) output for the \textit{CLR Rd} instruction.
+	    	Control signals for the Fetch cycle are given below. 
+	    	Clearly explain your reasoning.
+	    \end{enumerate}
+
+		\textbf{Answer:}
+		
+		Rd $\leftarrow$ Rd $\oplus$ Rd
+		\\
+		Simply EOR the source register, Rd, with itself.
+		
+		\begin{itemize}
+			\item MA = 1 due to Rd duplicate coming from the $||$	 operator.
+			\item ALU\_f = 1010 for EOR
+			\item RF\_wB = 1 due to writing to wB (Rd)
+			\item DM\_w = 0 to disallow writing to Data Memory
+		\end{itemize}
+   		\begin{tabular}{ |c|c|c| } 
+	   		\hline
+	   		\multicolumn{3}{|c|}{CLR}\\ \hline
+	   		Control Signals & IF & EX \\ \hline
+	   		MJ & 0  & x \\ \hline
+	   		MK & 0 &  x \\ \hline
+	   		ML & 0 &  x \\ \hline
+	   		IR\_en& 1 & x \\ \hline
+	   		PC\_en & 1 & 0  \\ \hline
+	   		PCh\_en & 0 & 0  \\ \hline
+	   		PCI\_en  & 0 &  0 \\ \hline
+	   		NPC\_en  & 1 &  x \\ \hline
+	   		SP\_en  & 0 &  0 \\ \hline
+	   		DEMUX  & x &  x \\ \hline
+	   		MA  & x &  1 \\ \hline
+	   		MB  & x &  0 \\ \hline
+	   		ALU\_f  & xxxx & 1010\\ \hline
+	   		MC  & xx &  00 \\ \hline
+	   		RF\_wA  & 0 &  0 \\ \hline
+	   		RF\_wB  & 0 &  1 \\ \hline
+	   		MD  & x &  x \\ \hline
+	   		ME  & x &  x \\ \hline
+	   		DM\_r  & x & x \\ \hline
+	   		DM\_w  & 0 &  0 \\ \hline
+	   		MF  & x &  x \\ \hline
+	   		MG  & x &  x \\ \hline
+	   		Adder\_f  & xx &  xx\\ \hline
+	   		Inc\_Dec  & x &  x \\ \hline
+	   		MH  & x &  x \\ \hline
+	   		MI  & x &  x \\ \hline
+ 		\end{tabular}
+	 	\quad
+	 	\quad
+		\begin{tabular}{ |c|c|} 
+			\hline
+			\multicolumn{2}{|c|}{CLR}\\ \hline
+			RAL output & EX \\ \hline
+			wA & x  \\ \hline
+			wB &  Rd\\ \hline
+			rA &  x \\ \hline
+			rB &  Rd\\ \hline
+		\end{tabular}
+	  
+	
+		\clearpage
+		%Question 2
+	   \item
+		Consider the implementation of the \textit{STD Y+q, Rr} (Store Indirect with Displacement) instruction on the enhanced AVR datapath.
+		
+		
+		\begin{enumerate}[a]
+			\item
+			List and explain the sequence of microoperations required to implement \textit{STD Y+q, Rr}. 
+			Note that this instruction takes two execute cycles (EX1 and EX2).
+			
+			\item
+			List and explain the control signals and the Register Address Logic (RAL) output for the \textit{STD Y+q, Rr} instruction.
+		\end{enumerate}
+		Control signals for the Fetch cycle are given below. Clearly explain your reasoning.
+		
+		\textbf{Answer:} 
+		
+			\textit{First cycle:} Get the address to store Rr, (Y+q)
+			\\
+			\textit{Second cycle:} then store Rr there.
+
+			DMAR $\leftarrow$ AR + q
+			\\
+			M[DMAR] $\leftarrow$ Rr 
+				
+		
+		\begin{itemize}
+			\item In the first execution cycle we only need to get YH:YL and then add it to q inside of the Address Adder and output the result to DMAR.
+			\item In the second cycle we only need to read Rr, and store it in M[DMAR].
+			\item You can see the above take place in the RAL table and EX1/EX2 columns in the control signals table.
+		\end{itemize}
+	
+		\begin{tabular}{ |c|c|c|c| } 
+			\hline
+			\multicolumn{4}{|c|}{STD Y+q, Rr}\\ \hline
+			Control Signals & IF & EX1 & EX2 \\ \hline
+			MJ & 0  &  x & x \\ \hline
+			MK & 0 &  x & x \\ \hline
+			ML & 0 &  x & x \\ \hline
+			IR\_en& 1 & 0 & x \\ \hline
+			PC\_en & 1 & 0 & 0\\ \hline
+			PCh\_en & 0 & 0 & 0 \\ \hline
+			PCI\_en  & 0 & 0 & 0 \\ \hline
+			NPC\_en  & 1 & x & x \\ \hline
+			SP\_en  & 0 & 0 & 0 \\ \hline
+			DEMUX  & x & x & x \\ \hline
+			MA  & x & x &  x \\ \hline
+			MB  & x & x & x \\ \hline
+			ALU\_f  & xxxx & xxxx &  xxxx\\ \hline
+			MC  & xx & xx & xx \\ \hline
+			RF\_wA  & 0 & 0 & 0 \\ \hline
+			RF\_wB  & 0 & 0 & 0 \\ \hline
+			MD  & x & x & 1 \\ \hline
+			ME  & x & x & 1 \\ \hline
+			DM\_r  & x & x & 0 \\ \hline
+			DM\_w  & 0 & 0 & 1 \\ \hline
+			MF  & x & 1 &  x \\ \hline
+			MG  & x & 1 & x \\ \hline
+			Adder\_f  & xx & 00 & xx \\ \hline
+			Inc\_Dec  & x & x &  x \\ \hline
+			MH  & x & 1 &  x \\ \hline
+			MI  & x & x & x\\ \hline
+		\end{tabular}
+		\quad
+		\quad
+		\begin{tabular}{ |c|c|c|} 
+			\hline
+			\multicolumn{3}{|c|}{STD Y+q, Rr}\\ \hline
+			RAL output & EX1 & EX2 \\ \hline
+			wA & x &  x \\ \hline
+			wB & x &  x \\ \hline
+			rA &  YH & Rr \\ \hline
+			rB &  YL & x \\ \hline
+		\end{tabular}
+		
+		
+		
+		
+		
+		
+		\clearpage
+		%Question 3
+		\item
+		Consider the implementation of the \textit{RCALL k} (\textit{Relative Call to Subroutine}) instruction on the enhanced AVR datapath.
+		
+		\begin{enumerate}[a]
+			\item
+			List and explain the sequence of microoperations required to implement \textit{RCALL k}. 
+			Note that this instruction takes two execute cycles (EX1 and EX2).
+			
+			\item
+			List and explain the control signals and the Register Address Logic (RAL) output for the \textit{RCALL k} instruction
+		\end{enumerate}
+		Control signals for the Fetch cycle are given below. Clearly explain your reasoning.
+		
+		\textbf{Answer:} 
+		
+		\textit{First cycle:} RAR gets PC + 1, PC points to (PC + k)
+		\\
+		\textit{Second cycle:} Jump to (PC + k)
+		
+		NPC $\leftarrow$ M[PC], RAR $\leftarrow$ PC + 1, M[SP] $\leftarrow$ RARL, SP $\leftarrow$ SP - 1
+		\\
+		PC $\leftarrow$ NPC, M[SP] $\leftarrow$ RARL, SP $\leftarrow$ SP - 1
+		
+		\begin{tabular}{ |c|c|c|c| } 
+			\hline
+			\multicolumn{4}{|c|}{RCALL}\\ \hline
+			Control Signals & IF & EX1 & EX2 \\ \hline
+			MJ & 0  & 0 & 1 \\ \hline
+			MK & 0 &  0  & x \\ \hline
+			ML & 0 & 0 & 0 \\ \hline
+			IR\_en& 1 & 1 &  x \\ \hline
+			PC\_en & 1 &  1 & x \\ \hline
+			PCh\_en & 0 & 0 &  0 \\ \hline
+			PCI\_en  & 0 & 0 &  0 \\ \hline											
+			NPC\_en  & 1 & 1 & 0 \\ \hline
+			SP\_en  & 0 & 1 & 1 \\ \hline
+			DEMUX  & x & x & x \\ \hline
+			MA  & x & x &  x \\ \hline
+			MB  & x & x  & x \\ \hline
+			ALU\_f  & xxxx & xxxx & xxxx\\ \hline
+			MC  & xx & xx & xx\\ \hline
+			RF\_wA  & 0 & 0 & 0 \\ \hline
+			RF\_wB  & 0 & 0 & 0 \\ \hline
+			MD  & x &  0 & 0 \\ \hline
+			ME  & x &  0 & 0 \\ \hline
+			DM\_r  & x & x & x \\ \hline
+			DM\_w  & 0 & 1 & 1 \\ \hline
+			MF  & x & 0 & x \\ \hline
+			MG  & x &  0 & x \\ \hline
+			Adder\_f  & xx & 00 & xx \\ \hline
+			Inc\_Dec  & x & 1 & 1 \\ \hline
+			MH  & x & x &  x \\ \hline
+			MI  & x & 0 & 1 \\ \hline
+		\end{tabular}
+		\quad
+		\quad
+		\begin{tabular}{ |c|c|c|} 
+			\hline
+			\multicolumn{3}{|c|}{RCALL}\\ \hline
+			RAL output & EX1 & EX2 \\ \hline
+			wA & x &  x \\ \hline
+			wB & x &  x\\ \hline
+			rA & x & x \\ \hline
+			rB & x & x \\ \hline
+		\end{tabular}
+
+
+
+
+
+
+
+
+		\clearpage
+		%Question 4
+		\item
+			Consider the implementation of the \textit{LPM R16, Z+} (Load Program Memory) instruction on the enhanced AVR datapath. 
+		
+		\begin{enumerate}[a]
+			\item
+			List and explain the sequence of microoperations required to implement \textit{LPM R16, Z+}. 
+			Note that this instruction takes three execute cycles (EX1, EX2, and EX3). 
+			
+			\item
+			List and explain the control signals and the Register Address Logic (RAL) output for the LPM instruction.
+			Control signals for the Fetch cycle are given below. Clearly explain your reasoning. 
+		\end{enumerate}
+		Control signals for the Fetch cycle are given below. Clearly explain your reasoning.
+		
+		\textbf{Answer:} 
+		
+		PMAR $\leftarrow$ Z, PC $\leftarrow$ PC + 1
+		\\
+		MDR $\leftarrow$ PM[PMAR], ZH:ZL $\leftarrow$ (ZH:ZL) + 1
+		\\
+		R16 $\leftarrow$ MDR
+		
+		
+		\textit{First cycle:}  Read the address in ZH:ZL., PC = PC + 1
+		\\
+		After the first cycle PMAR will have ZH:ZL
+		
+		\textit{Second cycle:} MDR $\leftarrow$ PM[ZH:ZL], Z $\leftarrow$ Z + 1
+		\\
+		After the second cycle MDR will have PM[Z], and Z will have been incremented and stored.
+		
+		\textit{Third cycle:} R16 $\leftarrow$ MDR 
+		\\
+		After the third cycle R16 will have the value of MDR
+		
+		\begin{itemize}
+			\item First cycle MUXL must be done to read ZH:ZL from PMAR
+			\item Second cycle MUXC must be 01 to inB will be reading ZL from the address adder
+			\item Third cycle MUXC must be 10 to so inB will be MDR
+		\end{itemize}
+
+		\begin{tabular}{ |c|c|c|c|c| } 
+			\hline
+			\multicolumn{5}{|c|}{LPM}\\ \hline
+			Control Signals & IF & EX1 & EX2 & EX3\\ \hline
+			MJ & 0  & x & x &  x \\ \hline
+			MK & 0 &  x & x &  x\\ \hline
+			ML & 0 &  x & 1 &  x \\ \hline
+			IR\_en& 1 & 0 & 0  &  x \\ \hline
+			PC\_en & 1 & 0 & 0 &  0 \\ \hline
+			PCh\_en & 0 & 0 & 0  & 0 \\ \hline
+			PCI\_en  & 0 & 0 & 0 & 0 \\ \hline
+			NPC\_en  & 1 & x & x &  x \\ \hline
+			SP\_en  & 0 & 0 & 0 &  0 \\ \hline
+			DEMUX  & x &  x & x & x \\ \hline
+			MA  & x & x & x &  x \\ \hline
+			MB  & x & x  & x &  x \\ \hline
+			ALU\_f  & xxxx & xxxx & xxxx &  xxxx \\ \hline
+			MC  & xx &  xx & 01 &  10 \\ \hline
+			RF\_wA  & 0 & 0 & 1 &  0 \\ \hline
+			RF\_wB  & 0 &  0 & 1 &  1 \\ \hline
+			MD  & x & x & x &  x \\ \hline
+			ME  & x & x & x & x \\ \hline
+			DM\_r  & x & x & x & x \\ \hline
+			DM\_w  & 0 & 0 & 0 &  0 \\ \hline
+			MF  & x & x & x &  x \\ \hline
+			MG  & x & 1 & 1 &  x \\ \hline
+			Adder\_f  & xx & 11  & 01 &  xx \\ \hline
+			Inc\_Dec  & x & x & x &   x\\ \hline
+			MH  & x & 1 & x &  x \\ \hline
+			MI  & x & x & x &   x\\ \hline
+		\end{tabular}
+		\quad
+		\quad
+		\begin{tabular}{ |c|c|c|c|} 
+			\hline
+			\multicolumn{4}{|c|}{LPM}\\ \hline
+			RAL output & EX1 & EX2 & EX3\\ \hline
+			wA & x &  ZH &  x \\ \hline
+			wB & x  & ZL &  R16 \\ \hline
+			rA & ZH  & ZH & x \\ \hline
+			rB & ZL   & ZL &  x\\ \hline
+		\end{tabular}	
+		
+
+
+
+
+
+		
+	\end{enumerate}
+
+\end{document}

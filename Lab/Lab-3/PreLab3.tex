@@ -1,0 +1,94 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Pre-Lab 3\\[1cm]
+    }
+    {\large
+       Introduction to AVR Simulation with Atmel Studio
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday 10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+    
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Pre-Lab}
+
+\begin{enumerate}
+	\item 
+	What are some differences between the debugging mode and run mode of the AVR simulator? 
+	What do you think are some benefits of each mode?
+	
+	The biggest difference is that in debugging mode the code halts after every line of execution.
+	This is like having a breakpoint on each line.
+	In run mode, the code executes continuously without planned stopping points.
+	
+	The benefit of running in debugging (line-by-line) mode is that it allows the user to inspect values that are held in registers and memory after each line of execution.
+	The benefit of running in run mode is that the user has the flexibility to run the program normally and put the program into debugging mode when the user would like to.
+	Also, if there is only a single location in the program where the user would like to inspect the system's state, they can place a breakpoint and run continuously up until that breakpoint.
+	
+	
+	\item 
+	What are breakpoints, and why are they useful when you are simulating your code?
+	
+	Breakpoints instruct the computer CPU to halt execution at that point.
+	This is useful when simulating code, because it allows the user to explore the state of the system at that point of execution.
+	
+	
+	\item 
+	Explain what the I/O View and Processor windows are used for. 
+	Can you provide input to the simulation via these windows?
+	 
+	The I/O View window contains all the configuration registers, the current bit values, and address, of configuration registers.
+	The I/O View window is also where you can simulate input on the ports.
+	
+	The Processor windows displays the current contents of the Program Counter,
+	Stack Pointer, the 16-bit pointer registers X, Y, and Z, and the Status Register.
+	
+	You can provide input to the I/O View because that view allows simulation of ports.
+	 
+	 
+	 \item 
+	 The ATmega128 microcontroller features three different types of memory:
+	 data memory, program memory, and EEPROM. 
+	 Which of these memory types can you access by using the Memory window of the simulator?
+	 
+	 \begin{enumerate}[a]
+	 	\item 
+	 	Data memory only
+	 	
+	 	\item 
+	 	Program memory only
+	 	
+	 	\item 
+	 	Data and program memory
+	 	
+	 	\item 
+	 	EEPROM only
+	 	
+	 	\item 
+	 	\textbf{All three types}
+	 \end{enumerate}
+\end{enumerate}
+
+
+\end{document}

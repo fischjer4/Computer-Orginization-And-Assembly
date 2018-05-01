@@ -1,0 +1,83 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Pre-Lab 7\\[1cm]
+    }
+    {\large
+     	 Timer/Counters
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday 10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+    
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Pre-Lab}
+
+	\begin{enumerate}
+		\item
+		 List the correct sequence of AVR assembly instructions needed to store the contents of registers R25:R24 into Timer/Counter1’s 16-bit register, TCNT1. 
+		 (You may assume that registers R25:R24 have already been initialized to contain some 16-bit value.)
+		
+		\begin{verbatim}
+			OUT TCNT1L, R24
+			OUT TCNT1H, R25
+		\end{verbatim}
+		
+		
+		
+		
+		
+		\item
+		 List the correct sequence of AVR assembly instructions needed to load the contents of Timer/Counter1’s 16-bit register, TCNT1, into registers R25:R24.
+		
+		
+		\begin{verbatim}
+			IN R24, LOW(TCNT1)	
+			IN R25, HIGH(TCNT1)
+		\end{verbatim}
+		
+		
+		
+		
+		\item
+		Suppose Timer/Counter0 (an 8-bit timer) has been configured to operate in Normal mode, and with no prescaling (i.e., clkT0 = clkI/O = 16 MHz). 
+		The decimal value “128” has just been written into Timer/Counter0’s 8-bit register, TCNT0. 
+		How long will it take for the TOV0 flag to become set? Give your answer as an amount of time, \textbf{not} as a number of cycles.
+		
+		
+		$Delay = \dfrac{(MAX + 1 - value) * prescale} {clkI/O}$
+		
+		And clkI/O is the frequency which is $f = \frac{1}{T}$ where T is the period.
+		So T = 62.5 nanoseconds, MAX = 256, value = 128, prescale = 1 because it is non-existant.
+		Therefore,
+		
+		$Delay = (255 + 1 - 128) * 1 * 0.000000062.5 = $  8 microseconds.
+	\end{enumerate}
+\end{document}
+

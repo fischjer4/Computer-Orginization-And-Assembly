@@ -1,0 +1,57 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Pre-Lab 2\\[1cm]
+    }
+    {\large
+       Pre-Lab: C$->$Assembly$->$Machine Code$->$TekBot
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday 10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+    
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Pre-Lab}
+
+\begin{enumerate}
+	\item 
+	Suppose you want to configure Port B so that all 8 of its pins are configured as outputs. 
+	Which I/O register is used to make this configuration, and what 8-bit binary value must be written to configure all 8 pins as outputs?
+	
+	DDRB is the register used to configure Port B's pins to outputs.
+	
+	The value that must be written to DDRB to configure all 8 pins as outputs is b11111111, or decimal 255.
+	
+	\item 
+	Suppose all 8 of Port D's pins have been configured as inputs. 
+	Which I/O register must be used to read the current state of Port D's pins?
+	
+	PIND is the I/O register that must be used to read the current state of Port D's pins.
+	
+	\item 
+	 Does the function of a PORTx register differ depending on the setting of its corresponding DDRx register? 
+	 If so, explain any differences
+	 
+	 Yes. If DDRx configures port X to input, then writing a 1 to PORTxn (where n is the specified I/0 pin) activates a pull-up resistor.
+\end{enumerate}
+
+
+\end{document}

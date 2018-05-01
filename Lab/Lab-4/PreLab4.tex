@@ -1,0 +1,87 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Pre-Lab 4\\[1cm]
+    }
+    {\large
+     	Data Manipulation \& the LCD
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday 10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+    
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+
+\section{Pre-Lab}
+
+\begin{enumerate}
+	\item 
+	What is the stack pointer? 
+	How is the stack pointer used, and how do you initialize it? 
+	Provide pseudocode (\textbf{not} actual assembly code) that illustrates how to initialize the stack pointer.
+	
+	The stack pointer points to the top of the stack frame and is responsible for keeping track of the return address and local variables.
+	
+	\begin{enumerate}
+		\item Load the low byte of of the end of the SRAM Address to R\textsubscript{r}.
+		\item Write the R\textsubscript{r} to the Stack Pointer Low byte.
+		\item Load the high byte of of the end of the SRAM Address to R\textsubscript{r}.
+		\item Write the R\textsubscript{r} to the Stack Pointer high byte.
+	\end{enumerate}
+	
+	
+	\item 
+	What does the AVR instruction LPM do, and how do you use it?
+	Provide pseudocode (\textbf{not} actual assembly code) that shows how to setup and use the LPM instruction.
+
+	LPM stands for Load Program Memory and this instruction loads the (one) byte pointed to by the Z register into a destination register.
+	
+	\begin{enumerate}
+		\item Load the address which you want to read from into the Z register.
+		\item Store the contents of the destination register in a TEMP register to retrieve later.
+		\item LPM destination register, Z register.
+	\end{enumerate}
+	
+	
+	\item 
+	Take a look at the definition file m128def.inc (This file can be found in the \textbf{Solution Explorer $ \rightarrow$  Dependencies} folder in Atmel Studio, assuming you have an Assembler project open and you have already built an assembly program that includes this definition file. 
+	Two good examples of such a project would be your Lab 1 and Lab 3 projects.) What is contained within this definition file? 
+	What are some of the benefits of using a definition file like this? 
+	Please be specific, and give a couple examples if possible.
+
+	m128def.inc contains definitions for registers and I/0 ports, so users can refer to them by their name instead of their physical address. From the document description itself:
+	
+	\begin{itemize}
+	 	\item \textit{When including this file in the assembly program file, all I/O register names and I/O register bit names appearing in the data book can be used.}
+		\item\textit{ In addition, the six registers forming the three data pointers X, Y and Z have been assigned names XL - ZH. Highest RAM address for Internal }
+		\item\textit{ SRAM is also defined}
+	\end{itemize}
+
+	The benefits of using a definition file like this include using registers and I/O ports by name. Specifically, instead of saying 0x16 one could simply say PINB.
+	Or, instead of saying r31 one could say ZH.
+	Using a definition file makes reading and understanding the code easier.
+
+
+\end{enumerate}
+
+
+\end{document}

@@ -1,0 +1,201 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Lab 2\\[1cm]
+    }
+    {\large
+       C$->$Assembly$->$Machine Code$->$TekBot
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday  10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+\section{Introduction}
+The purpose of this lab is two fold.
+The first is to introduce students to communicate with the AVR board in C.
+The second is to make sure students understand what the difference between PORT, DDR, and PIN are, and how to interact with them to achieve the desired output.
+
+
+
+\section{Internal Register Definitions and Constants}
+I configured DDRB's last four pins to output
+    \begin{verbatim} 
+        DDRB = 0b11110000;      // configure Port B pins for input/output
+    \end{verbatim} 
+I configured DDRD's pins to input.
+Specifically the first two, which will be reading the left whisker and right whisker.
+    \begin{verbatim}    
+        DDRD = 0b00000000;      // configure Port D pins for input/output
+    \end{verbatim} 
+Lastly, PORTD's pins were set to pull-up.
+This way we will know when the right/left whisker is touched because it will cut off the voltage to PORTD's first/second pin
+    \begin{verbatim} 
+        PORTD = 0b11111111;
+    \end{verbatim} 
+I created a macro for checking whether the left or right whisker (or both) were touched.
+The macros check whether PIND's first or second bit are low (are 0).
+If they are, then the whisker was touched. 
+    \begin{verbatim}
+        //checks if left whisker or both are signaled
+        #define leftW (PIND == 0b11111101 || PIND == 0b11111100) 
+        //checks if right whisker is signaled
+        #define rightW (PIND == 0b11111110)
+    \end{verbatim}
+
+
+\section{Main Program}
+The main function consists of a while loop that runs forever.
+The first line makes the robot move forward.
+Then, the macros to check if the left or right whisker were touched are checked.
+If the left whisker is touched, then the leftTriggered() function is called.
+If the right whisker is touched, then the rightTriggered() function is called.
+
+
+
+\section{leftTriggered()}
+The leftTriggered() function instructs the robot what to do when the left whisker is touched.
+The robot is instructed to backup for a second then turn right for a second.
+When the robot returns the main function the loop instructs it to move forward again.
+
+\section{rightTriggered()}
+The rightTriggered() function instructs the robot what to do when the right whisker is touched.
+The robot is instructed to backup for a second then turn left for a second.
+When the robot returns the main function the loop instructs it to move forward again.
+
+
+\section{Additional Questions}
+\begin{enumerate}
+    \item
+    This lab required you to compile two C programs (one given as a sample,
+    and another that you wrote) into a binary representation that allows them to
+    run directly on your mega128 board. 
+    Explain some of the benefits of writing code in a language like C that can be “cross compiled”. 
+    Also, explain some of the drawbacks of writing this way.
+
+    \textbf{Pros:}
+    \begin{itemize}
+        \item{Many of the complexities of writing in assembly are abstracted away when writing in C}
+        \item{There are plenty of C resources online that one can access when needing help}
+        \item{The code (in most cases) is hardware independent. The compiler will take care of translating the code into the source language.}
+        \item{The code tends to be a lot shorter and easier to read}
+    \end{itemize}
+    \textbf{Cons:}
+    \begin{itemize}
+        \item{Due to C abstracting away complexities that assembly language exposes, specific instructions may not be possible}
+        \item{The size of the binary output is bigger due to the overhead that comes along with high-level languages}
+    \end{itemize}
+
+    \item
+    The C program you just wrote does basically the same thing as the sample
+    assembly program you looked at in Lab 1. What is the size (in bytes) of
+    your Lab 1 \& Lab 2 output .hex files? 
+    Can you explain why there is a size difference between these two files, even though they both perform the same
+    BumpBot behavior?
+
+    The size of Lab-1's .hex file is 485 bytes.
+    The size of Lab-2's .hex file is 840 bytes, which is roughly 75\% bigger than the assembly version produced in Lab-1.
+    I believe that the .hex produced by the C code is bigger because of it being a high-level language.
+    There is extra overhead that comes with the C code that the compiler uses to translate the code into assembly code.
+    
+
+\end{enumerate}
+
+\section{Difficulties}
+The lab went well overall.
+The one difficulty that I encountered had to do with initializing PORTD.
+I forgot that if DDRD is configured to input, then writing a 1 to PORTD activates a pull-up resistor.
+I originally didn't have PORTD configured as a pull-up resistor, so my program didn't operate correctly.
+However, after I set PORTD to become a pull-up resistor all went smoothly.
+
+\section{Conclusion}
+In this lab we learned that DDRx is the register responsible for configuring Port x's pins to input or output, PORTx is the register used for output (unless DDRx is configured to input, then setting PORTx enables Port x as a pull-up resistor), PINx is the register used for input.
+This lab showed us how to access and set these registers in C.
+
+\section{Source Code}
+    \begin{verbatim}
+        /*
+            This code will cause a TekBot connected to the AVR board to
+            move forward and when it touches an obstacle, it will reverse
+            and turn away from the obstacle and resume forward motion.
+
+            PORT MAP
+            Port B, Pin 4 -> Output -> Right Motor Enable
+            Port B, Pin 5 -> Output -> Right Motor Direction
+            Port B, Pin 7 -> Output -> Left Motor Enable
+            Port B, Pin 6 -> Output -> Left Motor Direction
+            Port D, Pin 1 -> Input -> Left Whisker
+            Port D, Pin 0 -> Input -> Right Whisker
+        */
+        #include <avr/io.h> 
+        #include <util/delay.h> 
+        #include <stdio.h>
+
+        #define F_CPU 16000000
+        //checks if left whisker or both are signaled
+        #define leftW (PIND == 0b11111101 || PIND == 0b11111100) 
+        //checks if right whisker is signaled
+        #define rightW (PIND == 0b11111110)
+
+
+        /*
+            Function to react to the right whisker being hit
+            - Backs up for a second
+            - Turns left for a second
+            - Continues Forward
+        */
+        void rightTriggered(){
+            PORTB = 0b00000000;     // move backward
+            _delay_ms(10000);        // wait for 1 second
+            PORTB = 0b00100000;     // turn left
+            _delay_ms(10000);        // wait for 1 second
+        }
+        /*
+            Function to react to the left whisker being hit
+            Backs up for a second
+            - Turns right for a second
+            - Continues Forward
+        */
+        void leftTriggered(){
+            PORTB = 0b00000000;     // move backward
+            _delay_ms(10000);        // wait for 1 second
+            PORTB = 0b01000000;     // turn right
+            _delay_ms(10000);        // wait for 1 second
+        }
+
+        int main(void){
+            DDRB = 0b11110000;      // configure Port B pins for input/output
+            DDRD = 0b00000000;      // configure Port D pins for input/output
+            PORTD = 0b11111111;
+            
+            while(1) { // loop forever
+                PORTB = 0b01100000;     // make TekBot move forward
+                if(leftW){
+                    leftTriggered();
+                }
+                else if(rightW){
+                    rightTriggered();
+                }
+            }
+
+            return 0;
+        }
+    \end{verbatim}
+\end{document}

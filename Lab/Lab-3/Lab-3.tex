@@ -1,0 +1,111 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Lab 3\\[1cm]
+    }
+    {\large
+       – Introduction to AVR Simulation with Atmel Studio
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab Time: Thursday  10:00 - 11:50
+    \end{flushleft}
+    \begin{flushright}
+    Jeremy Fischer
+
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+\section{Additional Questions}
+\begin{enumerate}
+	\item 
+\textbf{		What is the initial value of DDRB? }
+		
+		DDRB is at 0x37 and has an initial value of 0x00
+		
+	
+	
+	\item 
+\textbf{	What is the initial value of PORTB? }
+	
+	PORTB is at 0x38 and has an initial value of 0x00
+	
+	
+	
+	\item
+\textbf{	Based on the initial values of DDRB and PORTB, what is Port B’s default I/O configuration? }
+	
+	Port B's default I/0 configuration is all 0's, or, set to output
+	
+	
+	\item 
+\textbf{	What 16-bit address was the stack pointer just initialized to? }
+	
+	The stack pointer was initialized to 0x10FF
+	
+	\item 
+\textbf{	What are the current contents of register r0? }
+	
+	r0 is initialized to 0xFF
+	
+	
+	
+	\item 
+\textbf{	How many times did the code inside the loop structure end up running? }
+	
+	The loop was ran five times
+	
+	
+	\item 
+\textbf{	Which instruction would you modify if you wanted to change the number of times that the loop runs? }
+	
+	To change the number of times the loop is ran I would change the ldi i, \$04 instruction. Specifically the counter, \$04 
+
+
+	\item 
+\textbf{	What are the current contents of register r1? }
+	
+	After the loop, the contents of r1 is 0xAA
+	
+	
+	\item 
+\textbf{	What are the current contents of register r2? }
+	
+	After loop2, the contents of r2 is 0x0F
+	
+	
+	\item 
+\textbf{	What are the current contents of register r3? }
+	
+	The current contents of r3 is 0x0F 
+	
+	
+	
+	\item 
+\textbf{	What is the value of the stack pointer now that your program flow has moved inside of a subroutine?}
+	
+	The stack pointer's value is 0x10FD
+	
+	
+	
+	\item 
+\textbf{	What is the final result of FUNCTION? (What are the hexadecimal contents of memory locations \$0105:\$0104?)}
+	
+	 0x0105 contains 0e and 0x0104 contains aa
+
+
+\end{enumerate}
+
+\end{document}
